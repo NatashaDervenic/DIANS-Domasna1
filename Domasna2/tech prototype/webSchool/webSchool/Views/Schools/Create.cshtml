@@ -1,0 +1,49 @@
+﻿@model webSchool.Models.School
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Додади ново училиште</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                Назив
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+            <div 
+            </div>
+            <div class="form-group">
+                Град
+                <input asp-for="city" class="form-control" />
+                <span asp-validation-for="city" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                Улица
+                <input asp-for="street" class="form-control" />
+                <span asp-validation-for="street" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                Насока
+                <input asp-for="modules" class="form-control" />
+                <span asp-validation-for="modules" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Додади" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад кон листата</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

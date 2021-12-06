@@ -1,0 +1,46 @@
+﻿@model webSchool.Models.School
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Детали за училиштето</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Назив
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.name)
+        </dd>
+        <dt class = "col-sm-2">
+        </dt>
+        <dd class = "col-sm-10">
+            <img src="@Model.imageUrl" />
+        </dd>
+        <dt class = "col-sm-2">
+            Град
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.city)
+        </dd>
+        <dt class = "col-sm-2">
+            Улица
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.street)
+        </dd>
+        <dt class = "col-sm-2">
+            Смер/Насока
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modules)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Измени</a> |
+    <a asp-action="Index">Назад кон листата</a>
+</div>
