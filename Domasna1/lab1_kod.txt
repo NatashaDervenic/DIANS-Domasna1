@@ -1,0 +1,41 @@
+from google.colab import drive
+drive.mount('/content/drive')
+import warnings
+warnings.filterwarnings("ignore")
+!pip install -q tabula-py
+import tabula
+# се прави функција која конвертира .pdf во .csv за обработка како dataset во python (употреблива е и понатаму во кодот)
+# добиениот фајл е зачуван како csvFileExport.csv
+def convertFromPdfToCsv(pdfFile):
+  df = tabula.read_pdf(pdfFile, pages='all')[0]
+  tabula.convert_into(pdfFile, "csvFileExport.csv", output_format="csv", pages='all')
+convertFromPdfToCsv("/content/lista na sredni ucilista.pdf")
+import pandas as pd
+# исчитување на конвертираниот .csv file како dataset користејќи pandas 
+sredniUcilistaMKD = pd.read_csv("/content/csvFileExport.csv")
+sredniUcilistaMKD.columns=['Индекс', 'Училиште', 'Град', 'Улица', 'Струка']
+sredniUcilistaMKD = sredniUcilistaMKD.iloc[1:]
+
+struka = sredniUcilistaMKD['Струка'].str.replace(r'\r', ' ')
+ulica = sredniUcilistaMKD['Улица'].str.replace(r'\r', ' ')
+uciliste = sredniUcilistaMKD['Училиште'].str.replace(r'\r', ' ')
+grad = sredniUcilistaMKD['Град'].str.replace(r'\r', ' ')
+sredniUcilistaMKD['Град'] = grad
+sredniUcilistaMKD['Струка'] = struka
+sredniUcilistaMKD['Улица'] = ulica
+sredniUcilistaMKD['Училиште'] = uciliste
+
+DF = sredniUcilistaMKD.iloc[0:28]
+DF2 = sredniUcilistaMKD.iloc[65:]
+sredniUcilistaMkdDF = pd.concat([DF, DF2])
+indeks = []
+for i in range(len(sredniUcilistaMkdDF['Индекс'])):
+  indeks.append(i+1)
+sredniUcilistaMkdDF['Индекс'] = indeks
+
+# .to_csv() е готова функција од python која го зачувува проследениот фајл како аргумент на google drive со име проследено како аргумент на функцијата
+# подоцна се зачувува локално обработениот фајл
+def exportFile(dataframe, fileName):
+  return dataframe.to_csv(fileName, index=False, encoding="utf-8-sig")
+exportFile(sredniUcilistaMkdDF, "sredniUcilistaMkd.csv")
+sredniUcilistaMkdDF
