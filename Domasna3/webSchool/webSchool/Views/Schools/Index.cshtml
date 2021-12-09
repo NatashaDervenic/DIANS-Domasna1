@@ -1,0 +1,58 @@
+﻿@model IEnumerable<webSchool.Models.School>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Листа на средни училишта во РМ</h1>
+
+<p>
+    <a asp-action="Create">Додади ново училиште</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Назив
+            </th>
+            <th>
+                
+            </th>
+            <th>
+                Град
+            </th>
+            <th>
+                Улица
+            </th>
+            <th>
+                Смер
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.city)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.street)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.modules)
+            </td>
+            <td>
+                <!-- <a asp-action="Edit" asp-route-id="@item.Id">Измени</a> | -->
+                <a asp-action="Details" asp-route-id="@item.Id">Детали</a> 
+                <!-- <a asp-action="Delete" asp-route-id="@item.Id">Избриши</a> -->
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
