@@ -14,7 +14,7 @@ namespace webSchool.Controllers
     {
         private readonly ApplicationDbContext database;
 
-       
+
         public SchoolsController(ApplicationDbContext context)
         {
             database = context;
@@ -151,7 +151,7 @@ namespace webSchool.Controllers
             return database.schools.Any(e => e.Id == id);
         }
         //funkcija koja cita podatoci od .csv file i zacuvuva vo baza
-        public void populate ()
+        public void populate()
         {
             using (var reader = new StreamReader(@"C:\Users\Bojan\Documents\FINKI\tretaGodina\zimskiSemestar\DIANS\lab1\sredniUcilistaMkd.csv", System.Text.Encoding.UTF8))
             {
@@ -167,10 +167,13 @@ namespace webSchool.Controllers
                 }
             }
         }
-
+        public static int counter = 0;
         public ActionResult searchSchoolGet(string q)
         {
             var result = database.schools.Where(x => x.city.Equals(q)).ToList();
+            if (result.Count == 0) ViewBag.valid = true;
+            counter = counter + 1;
+            ViewBag.counter = counter;
             return View(result);
         }
 
