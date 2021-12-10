@@ -171,6 +171,10 @@ namespace webSchool.Controllers
         public ActionResult searchSchoolGet(string q)
         {
             var result = database.schools.Where(x => x.city.Equals(q)).ToList();
+            if (result.Count == 0)
+            {
+                result = database.schools.Where(x => x.name.Equals(q)).ToList();
+            }
             if (result.Count == 0) ViewBag.valid = true;
             counter = counter + 1;
             ViewBag.counter = counter;
