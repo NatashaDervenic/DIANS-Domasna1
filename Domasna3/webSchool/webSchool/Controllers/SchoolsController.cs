@@ -29,6 +29,7 @@ namespace webSchool.Controllers
         // GET: Schools
         public async Task<IActionResult> Index()
         {
+            //populate();
             string loggedUserId = admin_permissions();
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) ViewBag.userRole = "User";
@@ -208,20 +209,21 @@ namespace webSchool.Controllers
         //funkcija koja cita podatoci od .csv file i zacuvuva vo baza
         public void populate()
         {
-            using (var reader = new StreamReader(@"C:\Users\Bojan\Documents\FINKI\tretaGodina\zimskiSemestar\DIANS\lab1\sredniUcilistaMkd.csv", System.Text.Encoding.UTF8))
+           using (var reader = new StreamReader(@"C:\Users\Bojan\Documents\FINKI\tretaGodina\zimskiSemestar\DIANS\lab1\sredniUcilistaMkd.txt", System.Text.Encoding.UTF8))
             {
                 var line = reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
                     line = reader.ReadLine();
                     var values = line.Split(',');
-                    School school = new School(values[1], "", values[2], values[3], values[4]);
+                    School school = new School(values[1], values[2], values[3], values[4], Double.Parse(values[5]), Double.Parse(values[6]),
+                        values[7], values[8], values[9], values[10], values[11], Int32.Parse(values[12]));
                     database.schools.Add(school);
-                    TryUpdateModelAsync(school);
+                    //TryUpdateModelAsync(school);
                     database.SaveChanges();
                 }
-            }
-            //admin_permissions();
+            } 
+           
         }
 
         public string admin_permissions()
