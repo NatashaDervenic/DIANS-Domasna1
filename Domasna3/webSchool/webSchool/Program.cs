@@ -1,10 +1,18 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webSchool.Data;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+void ConfigureServices(IServiceCollection services)
+{
+    // omitted for clarity
+    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+}
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));

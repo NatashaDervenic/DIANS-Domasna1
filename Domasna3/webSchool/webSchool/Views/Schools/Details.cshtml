@@ -41,6 +41,10 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Измени</a> |
+    @if (ViewBag.userRole == "Admin")
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Измени | </a> 
+        <a asp-action="Delete" asp-route-id="@Model.Id">Избриши | </a> 
+    }
     <a asp-action="Index">Назад кон листата</a>
 </div>

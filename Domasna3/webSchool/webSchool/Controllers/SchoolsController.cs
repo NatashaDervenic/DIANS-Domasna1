@@ -9,29 +9,49 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using webSchool.Data;
 using webSchool.Models;
+using System.Security.Claims;
 
 namespace webSchool.Controllers
 {
     public class SchoolsController : Controller
     {
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly ApplicationDbContext database;
 
-
-
-        public SchoolsController(ApplicationDbContext context)
+        public SchoolsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             database = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Schools
         public async Task<IActionResult> Index()
         {
+            string loggedUserId = admin_permissions();
+            var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
+            if (user == null) ViewBag.userRole = "User";
+            else
+            {
+                if (user.Role == "Admin") ViewBag.userRole = "Admin";
+                else ViewBag.userRole = "User";
+            }
             return View(await database.schools.ToListAsync());
         }
 
         // GET: Schools/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            string loggedUserId = admin_permissions();
+            var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
+            if (user == null) ViewBag.userRole = "User";
+            else
+            {
+                if (user.Role == "Admin") ViewBag.userRole = "Admin";
+                else ViewBag.userRole = "User";
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -48,10 +68,18 @@ namespace webSchool.Controllers
         }
 
         // GET: Schools/Create
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            string loggedUserId = admin_permissions();
+            if (loggedUserId == null)
+            {
+                return BadRequest(); //return View("U should be logged in for this action")
+            }
+            var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
+            if (user == null) return BadRequest();
+            if (user.Role == "Admin")
             return View();
+            return BadRequest(); //obicen korisnik e nema pravo da dodava ucilista
         }
 
         // POST: Schools/Create
@@ -71,10 +99,20 @@ namespace webSchool.Controllers
         }
 
         // GET: Schools/Edit/5
-        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Edit(int? id)
         {
+            string loggedUserId = admin_permissions();
+            if (loggedUserId == null)
+            {
+                return BadRequest(); //return View("U should be logged in for this action")
+            }
+            var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
+            if (user == null) return BadRequest();
+            if (user.Role == "Admin")
+                return View();
+            return BadRequest(); //obicen korisnik e nema pravo da izmenuva info za ucilista
+
             if (id == null)
             {
                 return NotFound();
@@ -122,11 +160,21 @@ namespace webSchool.Controllers
             }
             return View(school);
         }
-
+        //This activity is programmed but shoulnd't be used
         // GET: Schools/Delete/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
+            string loggedUserId = admin_permissions();
+            if (loggedUserId == null)
+            {
+                return BadRequest(); //return View("U should be logged in for this action")
+            }
+            var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
+            if (user == null) return BadRequest();
+            if (user.Role == "Admin")
+                return View();
+            return BadRequest(); //obicen korisnik e nema pravo da brisi ucilista
+
             if (id == null)
             {
                 return NotFound();
@@ -173,7 +221,17 @@ namespace webSchool.Controllers
                     database.SaveChanges();
                 }
             }
+            //admin_permissions();
         }
+
+        public string admin_permissions()
+        {
+            if (_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == null) return null;
+            return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //tuka logiraj ili return napraj na pocetna strana vo zavisnost od to dali e null etc.
+            
+        }
+
         public static int counter = 0;
         public ActionResult searchSchoolGet(string q)
         {
@@ -185,10 +243,9 @@ namespace webSchool.Controllers
             if (result.Count == 0) ViewBag.valid = true;
             counter = counter + 1;
             ViewBag.counter = counter;
+            //ViewBag.user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return View(result);
+            
         }
-
-
-
     }
 }
