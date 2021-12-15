@@ -88,7 +88,7 @@ namespace webSchool.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,name,imageUrl,city,street,modules")] School school)
+        public async Task<IActionResult> Create([Bind("Id,name,imageUrl,city,street,modules,latitude,longitude,contact,email,teachers,workTime,numOfStudents")] School school)
         {
             if (ModelState.IsValid)
             {
