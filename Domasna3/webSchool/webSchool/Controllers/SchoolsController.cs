@@ -106,7 +106,7 @@ namespace webSchool.Controllers
             string loggedUserId = admin_permissions();
             if (loggedUserId == null)
             {
-                return BadRequest(); //return View("U should be logged in for this action")
+                return View("error"); //return View("U should be logged in for this action")
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return BadRequest();
