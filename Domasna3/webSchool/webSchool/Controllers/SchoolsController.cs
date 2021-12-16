@@ -55,14 +55,14 @@ namespace webSchool.Controllers
 
             if (id == null)
             {
-                return NotFound();
+                return View("error");
             }
 
             var school = await database.schools
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (school == null)
             {
-                return NotFound();
+                return View("error");
             }
 
             return View(school);
@@ -74,13 +74,13 @@ namespace webSchool.Controllers
             string loggedUserId = admin_permissions();
             if (loggedUserId == null)
             {
-                return BadRequest(); //return View("U should be logged in for this action")
+                return View("error"); //return View("U should be logged in for this action")
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return BadRequest();
             if (user.Role == "Admin")
             return View();
-            return BadRequest(); //obicen korisnik e nema pravo da dodava ucilista
+            return View("error"); //obicen korisnik e nema pravo da dodava ucilista
         }
 
         // POST: Schools/Create
@@ -112,17 +112,17 @@ namespace webSchool.Controllers
             if (user == null) return BadRequest();
             if (user.Role == "Admin")
                 return View();
-            return BadRequest(); //obicen korisnik e nema pravo da izmenuva info za ucilista
+            return View("error"); //obicen korisnik e nema pravo da izmenuva info za ucilista
 
             if (id == null)
             {
-                return NotFound();
+                return View("error");
             }
 
             var school = await database.schools.FindAsync(id);
             if (school == null)
             {
-                return NotFound();
+                return View("error");
             }
             return View(school);
         }
@@ -136,7 +136,7 @@ namespace webSchool.Controllers
         {
             if (id != school.Id)
             {
-                return NotFound();
+                return View("error");
             }
 
             if (ModelState.IsValid)
@@ -150,7 +150,7 @@ namespace webSchool.Controllers
                 {
                     if (!SchoolExists(school.Id))
                     {
-                        return NotFound();
+                        return View("error");
                     }
                     else
                     {
@@ -168,24 +168,24 @@ namespace webSchool.Controllers
             string loggedUserId = admin_permissions();
             if (loggedUserId == null)
             {
-                return BadRequest(); //return View("U should be logged in for this action")
+                return View("error"); //return View("U should be logged in for this action")
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
-            if (user == null) return BadRequest();
-            if (user.Role == "Admin")
-                return View();
-            return BadRequest(); //obicen korisnik e nema pravo da brisi ucilista
+            if (user == null) return View("error");
+            if (user.Role != "Admin")
+                return View("error");//obicen korisnik e nema pravo da brisi ucilista
+            
 
             if (id == null)
             {
-                return NotFound();
+                return View("error");
             }
 
             var school = await database.schools
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (school == null)
             {
-                return NotFound();
+                return View("error");
             }
 
             return View(school);
@@ -230,8 +230,6 @@ namespace webSchool.Controllers
         {
             if (_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == null) return null;
             return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //tuka logiraj ili return napraj na pocetna strana vo zavisnost od to dali e null etc.
-            
         }
 
         public static int counter = 0;
