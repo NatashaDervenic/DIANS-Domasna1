@@ -110,9 +110,8 @@ namespace webSchool.Controllers
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return BadRequest();
-            if (user.Role == "Admin")
-                return View();
-            return View("error"); //obicen korisnik e nema pravo da izmenuva info za ucilista
+            if (user.Role != "Admin")
+                return View("error");
 
             if (id == null)
             {
@@ -132,7 +131,7 @@ namespace webSchool.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,name,imageUrl,city,street,modules")] School school)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,name,imageUrl,city,street,modules,latitude,longitude,contact,email,teachers,workTime,numOfStudents")] School school)
         {
             if (id != school.Id)
             {

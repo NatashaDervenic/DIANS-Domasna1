@@ -4,43 +4,85 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Измена на училиште</h1>
+<h1 style="color:white; text-align:center;">Измени го училиштето @Model.name</h1>
 
 <hr />
-<div class="row">
+<div class="row" style="margin-left:500px; color:white;">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                Назив: 
+            <div class="form-group" style="color:white;">
+                Име
                 <input asp-for="name" class="form-control" />
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                Град: 
+            <div class="form-group" style="color:white;">
+                Град
                 <input asp-for="city" class="form-control" />
                 <span asp-validation-for="city" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                Улица: 
+            <div class="form-group" style="color:white;">
+                Адреса
                 <input asp-for="street" class="form-control" />
                 <span asp-validation-for="street" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                Насоки/смерови
+            <div class="form-group" style="color:white;">
+                Насоки
                 <input asp-for="modules" class="form-control" />
                 <span asp-validation-for="modules" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Зачувај" class="btn btn-primary" />
+            <div class="form-group" style="color:white;">
+                Латитуда
+                <input asp-for="latitude" class="form-control" />
+                <span asp-validation-for="latitude" class="text-danger"></span>
             </div>
+            <div class="form-group" style="color:white;">
+                Лонгитуда
+                <input asp-for="longitude" class="form-control" />
+                <span asp-validation-for="longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="color:white;">
+                Слика
+                <input asp-for="imageUrl" class="form-control" />
+                <span asp-validation-for="imageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="color:white;">
+                Контакт
+                <input asp-for="contact" class="form-control" />
+                <span asp-validation-for="contact" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="color:white;">
+                E-mail
+                <input asp-for="email" class="form-control" />
+                <span asp-validation-for="email" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="color:white;">
+                Наставен кадар
+                <input asp-for="teachers" class="form-control" />
+                <span asp-validation-for="teachers" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="color:white;">
+                Работни часови
+                <input asp-for="workTime" class="form-control" />
+                <span asp-validation-for="workTime" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="color:white;">
+                Број на ученици
+                <input asp-for="numOfStudents" class="form-control" />
+                <span asp-validation-for="numOfStudents" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group" style="padding-left:75px;">
+                <input type="submit" value="Зачувај" class="btn btn-success" />
+            </div>
+            <br />
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Назад кон листата</a>
+    <a asp-action="Index" class="btn btn-danger" style="margin-left:550px;">Назад кон листата</a>
 </div>
 
 @section Scripts {
