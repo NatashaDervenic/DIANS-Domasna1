@@ -3,22 +3,23 @@
 
 <h1>@ViewBag.user</h1>
 
-<a href="~/home/index"> <img style="height:40px; margin-left: 25%; width:40px;" src="~/Poster/back.png"/> </a>
-<div style="width:550px; margin:auto; color:white; font-size:60px; border-radius:20px; text-align:center; height:120px; background-color:lightpink;">Пребарај училиште</div>
+<a href="~/home/index"> <img style="height:60px; margin-right: 100%; width:60px;" src="~/Poster/back.png"/> </a>
+<div style="width:550px; margin:auto; color:black; font-size:30px; border-radius:20px; text-align:center; text-transform: uppercase; height:55px; background-color:lightgray;">Пребарај училиште</div>
+<br /> 
 
 @using (Html.BeginForm("searchSchoolGet", "Schools"))
 {
 
-    <div style="margin-left: 40%;">
+    <div style="margin-left: 30%; font-size:25px;">
         <input type="text" placeholder="Внеси училиште или град" name="q" id="q">
-        <button type="submit"> <img style="heigth:30px; width: 30px;" src="~/Poster/search.png"/> </button>
+        <button type="submit"> <img style="heigth:50px; width: 50px;" src="~/Poster/search.png"/> </button>
     </div>
 
     <br /><br /><br />
 
     @if (ViewBag.valid == true && (int)ViewBag.counter != 1)
     {
-        <h3 style="color: darkred; height:38px; width:500px; margin-left: 30%;">Не се пронајдени резултати...</h3>
+        <h2 style="color:red; height:38px; width:500px; margin-left: 30%;">Настаната е грешка! Не се пронајдени такви резултати...</h2>
     }
 
     else
@@ -26,7 +27,7 @@
         foreach (School item in Model)
         {
             <ul>
-                <li style="background-color:rgb(158, 158, 158); border-radius:15px; padding-left: 20px; color:white;">
+                <li style="background-color:lightpink; border-radius:15px; padding-left: 20px; color:black;">
                     @item.name <br />
            
                      @item.city <br />
