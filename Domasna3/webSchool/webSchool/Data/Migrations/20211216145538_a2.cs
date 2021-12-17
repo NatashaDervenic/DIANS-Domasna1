@@ -4,7 +4,7 @@
 
 namespace webSchool.Data.Migrations
 {
-    public partial class updateDatabase_final : Migration
+    public partial class a2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,7 +18,9 @@ namespace webSchool.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            
+            migrationBuilder.DropColumn(
+                name: "numOfStudents",
+                table: "schools");
         }
     }
 }

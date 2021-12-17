@@ -37,6 +37,8 @@ namespace webSchool.Models
             this.teachers = teachers;
             this.workTime = workTime;
             this.numOfStudents = numOfStudents;
+
+            
         }
 
         public School() { }

@@ -4,7 +4,7 @@
 
 namespace webSchool.Data.Migrations
 {
-    public partial class administrator_preferences : Migration
+    public partial class init4 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -12,8 +12,8 @@ using webSchool.Data;
 namespace webSchool.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211205213721_schoolsDatabseP")]
-    partial class schoolsDatabseP
+    [Migration("20211216145538_a2")]
+    partial class a2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,6 +226,27 @@ namespace webSchool.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("webSchool.Models.Roles", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("loggedUserRoles");
+                });
+
             modelBuilder.Entity("webSchool.Models.School", b =>
                 {
                     b.Property<int>("Id")
@@ -238,9 +259,23 @@ namespace webSchool.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("contact")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("imageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("modules")
                         .IsRequired()
@@ -250,7 +285,18 @@ namespace webSchool.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("numOfStudents")
+                        .HasColumnType("int");
+
                     b.Property<string>("street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("teachers")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("workTime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

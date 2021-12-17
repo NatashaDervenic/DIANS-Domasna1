@@ -4,7 +4,7 @@
 
 namespace webSchool.Data.Migrations
 {
-    public partial class dataBaseNewColumns : Migration
+    public partial class init2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,6 +49,7 @@ namespace webSchool.Data.Migrations
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

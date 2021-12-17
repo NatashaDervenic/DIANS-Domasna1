@@ -4,7 +4,7 @@
 
 namespace webSchool.Data.Migrations
 {
-    public partial class schoolDatabasePopulate : Migration
+    public partial class init1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

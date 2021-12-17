@@ -1,5 +1,20 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model webSchool.Models.School
 
-<h1>ERROR</h1>
+@{
+    ViewData["Title"] = "error";
+}
+
+            <div style="padding: 40px 15px;text-align: center;">
+                <h1>
+                    Упс!</h1>
+                <h2>
+                    404 Not Found</h2>
+                <div class="error-details">
+                    Се извинуваме, настана грешка, страницата не е пронајдена!
+                </div>
+                <div style="margin-top:15px;margin-bottom:15px;">
+                    <a href="https://localhost:7147/" <button type="button" class="btn btn-danger">Назад кон почетна</button> </a>
+                </div>
+                </div>
+            
+

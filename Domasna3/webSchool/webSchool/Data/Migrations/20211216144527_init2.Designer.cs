@@ -12,8 +12,8 @@ using webSchool.Data;
 namespace webSchool.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211214202356_databaseUpdate_final")]
-    partial class databaseUpdate_final
+    [Migration("20211216144527_init2")]
+    partial class init2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

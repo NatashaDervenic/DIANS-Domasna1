@@ -209,7 +209,7 @@ namespace webSchool.Controllers
         //funkcija koja cita podatoci od .csv file i zacuvuva vo baza
         public void populate()
         {
-           using (var reader = new StreamReader(@"C:\Users\Bojan\Documents\FINKI\tretaGodina\zimskiSemestar\DIANS\lab1\sredniUcilistaMkd.txt", System.Text.Encoding.UTF8))
+           using (var reader = new StreamReader(@"D:\FINKI\Petti Semestar\Dizajn i arhitektura na softver\Sredni ucilista\sredniUcilistaMkd.txt", System.Text.Encoding.UTF8))
             {
                 var line = reader.ReadLine();
                 while (!reader.EndOfStream)

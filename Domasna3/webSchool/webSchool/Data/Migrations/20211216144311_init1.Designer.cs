@@ -12,8 +12,8 @@ using webSchool.Data;
 namespace webSchool.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211214165535_dataBaseNewColumns")]
-    partial class dataBaseNewColumns
+    [Migration("20211216144311_init1")]
+    partial class init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -284,6 +284,9 @@ namespace webSchool.Data.Migrations
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("numOfStudents")
+                        .HasColumnType("int");
 
                     b.Property<string>("street")
                         .IsRequired()
