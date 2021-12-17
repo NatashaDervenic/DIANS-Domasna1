@@ -56,6 +56,22 @@
 </div>
 
 
+<div style="display:inline;">
+        <p>
+            Рејтинг
+        </p>
+    </div> 
+
+        <div style="display:inline;">
+            <p id="score"></p>
+        </div>
+      <br><br>  
+    <button class="star btn btn-danger"> <img class="img" style="height: 40px; width: 40px;" src="~/Poster/star.png" alt="star" value="1"> </button>
+    <button class="star btn btn-danger"> <img class="img" style="height: 40px; width: 40px;" src="~/Poster/star.png" alt="star" value="2"> </button>
+    <button class="star btn btn-danger"> <img class="img" style="height: 40px; width: 40px;" src="~/Poster/star.png" alt="star" value="3"> </button>
+    <button class="star btn btn-danger"> <img class="img" style="height: 40px; width: 40px;" src="~/Poster/star.png" alt="star" value="4"> </button>
+    <button class="star btn btn-danger"> <img class="img" style="height: 40px; width: 40px;" src="~/Poster/star.png" alt="star" value="5"> </button>
+
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -77,3 +93,15 @@
         var marker = L.marker([lat, lon]).addTo(map);
     });
 </script>
+<script>
+        $(function(){
+            var selectedValue;
+            var score = Math.random()*5;
+            $("#score").text(score.toFixed(2));
+            $(".star").on("click",(function(){
+                selectedValue = $(this).find(".img").attr("value");
+                score = score + selectedValue*0.05;
+                $("#score").text(score.toFixed(2));
+            })); 
+        });
+    </script>
