@@ -246,5 +246,9 @@ namespace webSchool.Controllers
             return View(result);
             
         }
+        public ActionResult credits()
+        {
+            return View("Credits");
+        }
     }
 }
