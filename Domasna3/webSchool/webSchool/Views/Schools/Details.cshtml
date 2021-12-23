@@ -7,6 +7,7 @@
 
 <h1 style="color:white;">Детали за училиштето @Model.name</h1>
  <hr />
+ <input type="hidden" id="schoolName" schoolName="@Model.name"/>
 <div class="row" style="font-weight:bold;">
         <div style="width:40%; margin-top:50px;" class="col-xs-5">
             <div class=row>
@@ -104,7 +105,12 @@
         $(function(){
             var selectedValue;
             var score = Math.random()*5;
-            $("#score").text(score.toFixed(2));
+            var schoolName = $("#schoolName").attr("schoolName");
+            if (schoolName == "Тест назив"){
+                $("#score").text("0");
+            } else {
+                $("#score").text(score.toFixed(2));
+            }
             $(".star").on("click",(function(){
                 selectedValue = $(this).find(".img").attr("value");
                 score = score + selectedValue*0.05;
