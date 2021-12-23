@@ -1,0 +1,84 @@
+﻿@model IEnumerable<webSchool.Models.School>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    table {
+        background-image: linear-gradient(to right,#ebc0de,white);
+        border-collapse: collapse;
+    }
+
+    tr:nth-child(even){
+        background-image: linear-gradient(to left,rgb(220,240,242),white);       
+    }
+
+    td,th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    thead {
+        background-color: rgb(176, 118, 169);
+    }
+
+
+</style>
+
+<h1 style="color:white">Листа на средни училишта во РМ</h1>
+
+<p>
+    @if (ViewBag.userRole == "Admin")
+    {
+        <a class="btn btn-success" asp-action="Create">Додади ново училиште</a>   
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Назив
+            </th>
+             <th>
+
+            </th>
+            <th>
+                Град
+            </th>
+            <th>
+                Улица
+            </th>
+            <th>
+                Смер
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.city)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.street)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.modules)
+            </td>
+            <td>
+                <!-- <a asp-action="Edit" asp-route-id="@item.Id">Измени</a> | -->
+                <a asp-action="Details" asp-route-id="@item.Id" style = "color: rgb(77, 6, 68); text-decoration: underline dotted purple ">Дeтали</a> 
+                <!-- <a asp-action="Delete" asp-route-id="@item.Id">Избриши</a> -->
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

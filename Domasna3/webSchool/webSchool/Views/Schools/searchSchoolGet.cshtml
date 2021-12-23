@@ -1,0 +1,45 @@
+﻿@model IEnumerable<webSchool.Models.School>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<h1>@ViewBag.user</h1>
+
+<a href="~/home/index"> <img style="height:60px; margin-right: 100%; width:60px;" src="~/Poster/back.png"/> </a>
+<div style="width:550px; margin:auto; color:black; font-size:30px; border-radius:20px; text-align:center; text-transform: uppercase; height:55px; background-color:lightgray;">Пребарај училиште</div>
+<br /> 
+
+@using (Html.BeginForm("searchSchoolGet", "Schools"))
+{
+
+    <div style="margin-left: 30%; font-size:25px;">
+        <input type="text" placeholder="Внеси училиште или град" name="q" id="q">
+        <button type="submit"> <img style="heigth:50px; width: 50px;" src="~/Poster/search.png"/> </button>
+    </div>
+
+    <br /><br /><br />
+
+    @if (ViewBag.valid == true && (int)ViewBag.counter != 1)
+    {
+        <h2 style="color:red; height:38px; width:500px; margin-left: 30%;">Настаната е грешка! Не се пронајдени такви резултати...</h2>
+    }
+
+    else
+    {
+        foreach (School item in Model)
+        {
+            <ul>
+                <li style="background-color:lightpink; border-radius:15px; padding-left: 20px; color:black;">
+                    @item.name <br />
+           
+                     @item.city <br />
+            
+                    @item.street <br />
+             
+                    @item.modules <br />
+                </li>
+            
+            </ul>
+        }
+    }
+    <br />
+
+}

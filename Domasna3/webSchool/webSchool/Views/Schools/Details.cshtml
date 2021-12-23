@@ -1,0 +1,120 @@
+﻿@model webSchool.Models.School
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+
+
+<h1 style="color:white;">Детали за училиштето @Model.name</h1>
+ <hr />
+ <input type="hidden" id="schoolName" schoolName="@Model.name"/>
+<div class="row" style="font-weight:bold;">
+        <div style="width:40%; margin-top:50px;" class="col-xs-5">
+            <div class=row>
+                <div class="col-xs-6" style="width:50%;color:white;">
+                    <h6 style="font-weight:bold;">ИМЕ:</h6>
+                    <h6 style="font-weight:bold;">ГРАД:</h6>
+                    <h6 style="font-weight:bold;">УЛИЦА:</h6>
+                    <h6 style="font-weight:bold;">КОНТАКТ:</h6>
+                    <h6 style="font-weight:bold;">E-MAIL:</h6>
+                    <h6 style="font-weight:bold;">НАСТАВЕН КАДАР:</h6>
+                    @if (Model.workTime != "")
+                    {
+                        <h6 style="font-weight:bold;">РАБОТНО ВРЕМЕ:</h6>
+                    }
+                    <h6 style="font-weight:bold;">БРОЈ НА СТУДЕНТИ:</h6>
+                    <h6 style="font-weight:bold;">СМЕР/НАСОКА:</h6>
+                </div>
+                <div class="col-xs-6"style="width:50%; color:black;">
+                    <h6>@Model.name</h6>
+                    <h6>@Model.city</h6>
+                    <h6>@Model.street</h6>
+                    <h6>@Model.contact</h6>
+                    <h6>@Model.email</h6>
+                    <h6><a href=@Model.teachers style="text-decoration:none;">НАСТАВЕН КАДАР</a></h6>
+                    <h6>@Model.workTime</h6>
+                    <h6>@Model.numOfStudents</h6>
+                    <h6>@Model.modules</h6>
+                </div>
+           </div><br /><br /><br /><br />
+                 <h2>
+                    Рејтинг
+                </h2>
+
+                <img class="img" style="display:inline; height: 25px; width: 25px;" src="~/Poster/star.png" alt="star" value="1"> <p style="font-weight: bold; display:inline;" id="score"></p> <br />
+        
+                Додади твој рејтинг: 
+                <button class="star btn btn-danger"> <img class="img" style="height: 35px; width: 35px;" src="~/Poster/star.png" alt="star" value="1"> </button>
+                <button class="star btn btn-danger"> <img class="img" style="height: 35px; width: 35px;" src="~/Poster/star.png" alt="star" value="2"> </button>
+                <button class="star btn btn-danger"> <img class="img" style="height: 35px; width: 35px;" src="~/Poster/star.png" alt="star" value="3"> </button>
+                <button class="star btn btn-danger"> <img class="img" style="height: 35px; width: 35px;" src="~/Poster/star.png" alt="star" value="4"> </button>
+                <button class="star btn btn-danger"> <img class="img" style="height: 35px; width: 35px;" src="~/Poster/star.png" alt="star" value="5"> </button>
+
+     </div>
+    <div style="width:60%; padding-left:200px;"class="col-xs-7">
+          <img style="width:500px;"src="@Model.imageUrl" /><br /><br />
+          <div style="height:300px; width:500px;" id="map" latitude=@Model.latitude longitude=@Model.longitude> </div>
+    </div>
+</div>
+
+<br /><br />
+
+<div>
+    @if (ViewBag.userRole == "Admin")
+    {
+        <a class="btn btn-light" asp-action="Edit" asp-route-id="@Model.Id">Измени</a> 
+        <a class="btn btn-danger"asp-action="Delete" asp-route-id="@Model.Id">Избриши</a> 
+    }
+    <a class="btn btn-light" asp-action="Index">Назад кон листата</a>
+</div>
+
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var lat = parseFloat($("#map").attr('latitude'));
+        var lon = parseFloat($("#map").attr('longitude'));
+        //console.log(lat+" "+lon);
+        var map = L.map('map').setView([lat, lon], 13);
+        var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1
+        }).addTo(map);
+        var marker = L.marker([lat, lon]).addTo(map);
+        
+        
+        var userLocation = navigator.geolocation.getCurrentPosition(showPosition);
+        
+        function showPosition(position) {
+            //console.log(position.coords.latitude + " " + position.coords.longitude)   
+            L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+        }
+
+          
+
+    });
+</script>
+<script>
+        $(function(){
+            var selectedValue;
+            var score = Math.random()*5;
+            var schoolName = $("#schoolName").attr("schoolName");
+            if (schoolName == "Тест назив"){
+                $("#score").text("0");
+            } else {
+                $("#score").text(score.toFixed(2));
+            }
+            $(".star").on("click",(function(){
+                selectedValue = $(this).find(".img").attr("value");
+                score = score + selectedValue*0.05;
+                $("#score").text(score.toFixed(2));
+            })); 
+        });
+    </script> 
