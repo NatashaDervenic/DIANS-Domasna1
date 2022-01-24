@@ -25,7 +25,7 @@ namespace webSchool.Controllers
             database = context;
             _httpContextAccessor = httpContextAccessor;
         }
-
+        //1
         // GET: Schools
         public async Task<IActionResult> Index()
         {
@@ -67,7 +67,7 @@ namespace webSchool.Controllers
 
             return View(school);
         }
-
+        //2
         // GET: Schools/Create
         public IActionResult Create()
         {
@@ -99,6 +99,7 @@ namespace webSchool.Controllers
             return View(school);
         }
 
+        //3
         // GET: Schools/Edit/5
 
         public async Task<IActionResult> Edit(int? id)
@@ -160,6 +161,7 @@ namespace webSchool.Controllers
             }
             return View(school);
         }
+        //4
         //This activity is programmed but shoulnd't be used
         // GET: Schools/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -189,7 +191,7 @@ namespace webSchool.Controllers
 
             return View(school);
         }
-
+        
         // POST: Schools/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -205,6 +207,7 @@ namespace webSchool.Controllers
         {
             return database.schools.Any(e => e.Id == id);
         }
+        //5
         //funkcija koja cita podatoci od .csv file i zacuvuva vo baza
         public void populate()
         {
@@ -218,34 +221,42 @@ namespace webSchool.Controllers
                     School school = new School(values[1], values[2], values[3], values[4], Double.Parse(values[5]), Double.Parse(values[6]),
                         values[7], values[8], values[9], values[10], values[11], Int32.Parse(values[12]));
                     database.schools.Add(school);
-                    //TryUpdateModelAsync(school);
                     database.SaveChanges();
                 }
             } 
            
         }
 
+        //Returns id of the logged user. If the user is not logged returns null
         public string admin_permissions()
         {
             if (_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == null) return null;
             return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
+        //Counter used in the view for optimization of the returned list by searching
         public static int counter = 0;
-        public ActionResult searchSchoolGet(string q)
+
+        //Returns the search page with a list filled with results
+        public ActionResult searchSchoolGet(string inputField)
         {
-            var result = database.schools.Where(x => x.city.Equals(q)).ToList();
-            if (result.Count == 0)
+            //searchList is variable that contains the result (from the inputField) of searching in database
+            //searches for city if null returns empty list
+            var searchList = database.schools.Where(x => x.city.Equals(inputField)).ToList();
+            //if the list is empty then it searches by name
+            if (searchList.Count == 0)
             {
-                result = database.schools.Where(x => x.name.Equals(q)).ToList();
+                searchList = database.schools.Where(x => x.name.Equals(inputField)).ToList();
             }
-            if (result.Count == 0) ViewBag.valid = true;
+            //ViewbBag.valid is variable that is used in the view to check if results are found in the database from searching
+            if (searchList.Count == 0) ViewBag.valid = true;
             counter = counter + 1;
             ViewBag.counter = counter;
-            //ViewBag.user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return View(result);
+            //Returns the searchSchoolGet view and passes the searchList as a model
+            return View(searchList);
             
         }
+        //Returns the credits page with contributors of the site
         public ActionResult credits()
         {
             return View("Credits");
