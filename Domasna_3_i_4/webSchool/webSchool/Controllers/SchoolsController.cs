@@ -25,18 +25,27 @@ namespace webSchool.Controllers
             database = context;
             _httpContextAccessor = httpContextAccessor;
         }
+
+        public Boolean checkRole(Roles user, string role)
+        {
+            if (user.Role == role) return true;
+            else return false;
+        }
+
         //1
         // GET: Schools
         public async Task<IActionResult> Index()
         {
-            //populate();
-            string loggedUserId = admin_permissions();
+            //loggedUser() e funckija koja go vrakja id-to na logiraniot korisnik. Dokolku nikoj ne e logiran vrakja null koj podocna se sreduva
+            string loggedUserId = loggedUser();
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) ViewBag.userRole = "User";
             else
             {
-                if (user.Role == "Admin") ViewBag.userRole = "Admin";
-                else ViewBag.userRole = "User";
+                //if (user.Role == "Admin") 
+                //else ViewBag.userRole = "User";
+                if (checkRole(user, "Admin")) ViewBag.userRole = "Admin";
+                else ViewBag.username = "User";
             }
             return View(await database.schools.ToListAsync());
         }
@@ -44,13 +53,15 @@ namespace webSchool.Controllers
         // GET: Schools/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            string loggedUserId = admin_permissions();
+            string loggedUserId = loggedUser();
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) ViewBag.userRole = "User";
             else
             {
-                if (user.Role == "Admin") ViewBag.userRole = "Admin";
-                else ViewBag.userRole = "User";
+                //if (user.Role == "Admin") ViewBag.userRole = "Admin";
+                //else ViewBag.userRole = "User";
+                if (checkRole(user, "Admin")) ViewBag.userRole = "Admin";
+                else ViewBag.username = "User";
             }
 
             if (id == null)
@@ -71,15 +82,17 @@ namespace webSchool.Controllers
         // GET: Schools/Create
         public IActionResult Create()
         {
-            string loggedUserId = admin_permissions();
+            string loggedUserId = loggedUser();
             if (loggedUserId == null)
             {
                 return View("error"); //return View("U should be logged in for this action")
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return BadRequest();
-            if (user.Role == "Admin")
-            return View();
+            //if (user.Role == "Admin")
+            //return View();
+            if (checkRole(user, "Admin")) return View();
+            else ViewBag.username = "User";
             return View("error"); //obicen korisnik e nema pravo da dodava ucilista
         }
 
@@ -104,23 +117,25 @@ namespace webSchool.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            string loggedUserId = admin_permissions();
+            string loggedUserId = loggedUser();
             if (loggedUserId == null)
             {
                 return View("error"); //return View("U should be logged in for this action")
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return BadRequest();
-            if (user.Role != "Admin")
+            //if (user.Role != "Admin")
+            //    return View("error");
+            if (!checkRole(user, "Admin"))
                 return View("error");
 
-            if (id == null)
-            {
-                return View("error");
-            }
+            //if (id == null)
+            //{
+            //    return View("error");
+            //}
 
             var school = await database.schools.FindAsync(id);
-            if (school == null)
+            if (id == null || school == null)
             {
                 return View("error");
             }
@@ -166,25 +181,26 @@ namespace webSchool.Controllers
         // GET: Schools/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            string loggedUserId = admin_permissions();
+            string loggedUserId = loggedUser();
             if (loggedUserId == null)
             {
                 return View("error"); //return View("U should be logged in for this action")
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return View("error");
-            if (user.Role != "Admin")
-                return View("error");//obicen korisnik e nema pravo da brisi ucilista
-            
+            //if (user.Role != "Admin")
+            //    return View("error");
 
-            if (id == null)
-            {
-                return View("error");
-            }
+            if (!checkRole(user, "Admin")) return View("error");//obicen korisnik e nema pravo da brisi ucilista
+ 
+            //if (id == null)
+            //{
+            //    return View("error");
+            //}
 
             var school = await database.schools
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (school == null)
+            if (id == null || school == null)
             {
                 return View("error");
             }
@@ -228,7 +244,7 @@ namespace webSchool.Controllers
         }
 
         //Returns id of the logged user. If the user is not logged returns null
-        public string admin_permissions()
+        public string loggedUser()
         {
             if (_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == null) return null;
             return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
