@@ -32,7 +32,7 @@ namespace webSchool.Controllers
             else return false;
         }
 
-        //1
+        //1 Mihaela
         // GET: Schools
         public async Task<IActionResult> Index()
         {
@@ -44,7 +44,8 @@ namespace webSchool.Controllers
             {
                 //if (user.Role == "Admin") 
                 //else ViewBag.userRole = "User";
-                if (checkRole(user, "Admin")) ViewBag.userRole = "Admin";
+                if (checkRole(user, "Admin")) 
+                    ViewBag.userRole = "Admin";
                 else ViewBag.username = "User";
             }
             return View(await database.schools.ToListAsync());
@@ -78,7 +79,7 @@ namespace webSchool.Controllers
 
             return View(school);
         }
-        //2
+        //2 Martina
         // GET: Schools/Create
         public IActionResult Create()
         {
@@ -112,7 +113,7 @@ namespace webSchool.Controllers
             return View(school);
         }
 
-        //3
+        //3 Bojan
         // GET: Schools/Edit/5
 
         public async Task<IActionResult> Edit(int? id)
@@ -176,7 +177,7 @@ namespace webSchool.Controllers
             }
             return View(school);
         }
-        //4
+        //4 Sofija
         //This activity is programmed but shoulnd't be used
         // GET: Schools/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -223,7 +224,7 @@ namespace webSchool.Controllers
         {
             return database.schools.Any(e => e.Id == id);
         }
-        //5
+        //5 Natasa
         //funkcija koja cita podatoci od .csv file i zacuvuva vo baza
         public void populate()
         {
