@@ -182,26 +182,21 @@ namespace webSchool.Controllers
         // GET: Schools/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            // checking if the user is logged
+            // checking if the user is logged in
             string loggedUserId = loggedUser();
             if (loggedUserId == null)
             {
-                return View("error"); //return View("U should be logged in for this action")
+                //return View("You should be logged in for this action")
+                return View("error"); 
             }
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return View("error");
-            //if (user.Role != "Admin")
-            //    return View("error");
+            
 
             // checking if the user is not an Admin, returns the error view 
             // standard user is not allowed to make changes (delete school) in the database
             if (!checkRole(user, "Admin")) return View("error");
  
-            //if (id == null)
-            //{
-            //    return View("error");
-            //}
-
             // it searches the school with the given parameter id in the database
             // and the result is stored in the variable school
             var school = await database.schools
