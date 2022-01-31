@@ -99,22 +99,4 @@
 
           
 
-    });
-</script>
-<script>
-        $(function(){
-            var selectedValue;
-            var score = Math.random()*5;
-            var schoolName = $("#schoolName").attr("schoolName");
-            if (schoolName == "Тест назив"){
-                $("#score").text("0");
-            } else {
-                $("#score").text(score.toFixed(2));
-            }
-            $(".star").on("click",(function(){
-                selectedValue = $(this).find(".img").attr("value");
-                score = score + selectedValue*0.05;
-                $("#score").text(score.toFixed(2));
-            })); 
-        });
-    </script> 
+<script src="~/js/detailsJS.js" type="text/javascript"></script>
