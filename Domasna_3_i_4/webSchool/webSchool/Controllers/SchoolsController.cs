@@ -225,20 +225,20 @@ namespace webSchool.Controllers
             return database.schools.Any(e => e.Id == id);
         }
         //5 Natasa
-        //funkcija koja cita podatoci od .csv file i zacuvuva vo baza
+        //Function that reads the data from the .csv file and saves it in the base
         public void populate()
         {
+           //Access to the .csv file (in this case, the .txt file)
            using (var reader = new StreamReader(@"D:\FINKI\Petti Semestar\Dizajn i arhitektura na softver\Sredni ucilista\sredniUcilistaMkd.txt", System.Text.Encoding.UTF8))
             {
-                var line = reader.ReadLine();
+                var line = reader.ReadLine();//Reads the data in the file
                 while (!reader.EndOfStream)
                 {
                     line = reader.ReadLine();
-                    var values = line.Split(',');
+                    var values = line.Split(',');//It splits the string into a list
                     School school = new School(values[1], values[2], values[3], values[4], Double.Parse(values[5]), Double.Parse(values[6]),
-                        values[7], values[8], values[9], values[10], values[11], Int32.Parse(values[12]));
-                    database.schools.Add(school);
-                    database.SaveChanges();
+                        values[7], values[8], values[9], values[10], values[11], Int32.Parse(values[12]));//We convert the string representation of a number in a specified style and format
+                    database.SaveChanges();//We save the changes
                 }
             } 
            
