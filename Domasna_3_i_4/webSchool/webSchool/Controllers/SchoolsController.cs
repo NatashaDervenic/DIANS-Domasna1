@@ -81,35 +81,46 @@ namespace webSchool.Controllers
         }
         //2 Martina
         // GET: Schools/Create
+        //A method for checking if the user is logged in and if the user is admin to return the Create View
         public IActionResult Create()
         {
+            //loggedUser() is a function that returns the id of the logged user
             string loggedUserId = loggedUser();
+            //If loggedUserId is null it returns Error View ("You should be logged in for this action")
             if (loggedUserId == null)
             {
-                return View("error"); //return View("U should be logged in for this action")
+                return View("error"); 
             }
+            //user is a variable that takes the role that the particular user has
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
+            //If the user variable is null it returns BadRequest()
             if (user == null) return BadRequest();
-            //if (user.Role == "Admin")
-            //return View();
+            //If the user's role is Admin the user is allowed to access the Create View which consists a fill in form
             if (checkRole(user, "Admin")) return View();
+            //If the user's role is not Admin, the user is not allowed to access the Create View which leads to an Error View
+            //A user that is not an Admin is not allowed to add more schools to the database
             else ViewBag.username = "User";
-            return View("error"); //obicen korisnik e nema pravo da dodava ucilista
+            return View("error");
         }
 
         // POST: Schools/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //This is a method that is called after filling the create form. It's a post method that is called after pressing the 'save' button on the Create page
+        //We are recieving an object that contains all the filled in inputs and we are binding the info that is filled in the inputs as a School object
         public async Task<IActionResult> Create([Bind("Id,name,imageUrl,city,street,modules,latitude,longitude,contact,email,teachers,workTime,numOfStudents")] School school)
         {
+            //If we binded the object into the Model successfully we can add the object into the database
             if (ModelState.IsValid)
             {
+                //Adding the object to the database
                 database.Add(school);
+                //Saving the newly added changes
                 await database.SaveChangesAsync();
+                //Returns the Index page
                 return RedirectToAction(nameof(Index));
             }
+            //Returns the same page but it is not valid, it shows an error
             return View(school);
         }
 
