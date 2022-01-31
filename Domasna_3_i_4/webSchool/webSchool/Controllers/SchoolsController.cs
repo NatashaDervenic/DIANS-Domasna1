@@ -26,61 +26,69 @@ namespace webSchool.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        //Function that returns true if users role is the role that we put as an argument by calling the function, otherwise returns false
         public Boolean checkRole(Roles user, string role)
         {
             if (user.Role == role) return true;
             else return false;
         }
 
-        //1 Mihaela
-        // GET: Schools
+        //The initial method for calling the main (Index) page
         public async Task<IActionResult> Index()
         {
-            //loggedUser() e funckija koja go vrakja id-to na logiraniot korisnik. Dokolku nikoj ne e logiran vrakja null koj podocna se sreduva
+            //loggedUserId is variable type string that contains logged user's id. If there is no logged user loggedUserId will be null
             string loggedUserId = loggedUser();
+            //In the database we search for user providing it's id. If there is no result it will return null, otherwise
+            //in the user variable we will have the actual user object
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
-            if (user == null) ViewBag.userRole = "User";
+
+            if (user == null)
+                ViewBag.userRole = "User"; //If the user with given credentials is not logged we store "user" as a string in the
+                                           //ViewBag.userRole so we can access it in the view and handle it since we havent logged admin
             else
             {
-                //if (user.Role == "Admin") 
-                //else ViewBag.userRole = "User";
-                if (checkRole(user, "Admin")) 
-                    ViewBag.userRole = "Admin";
-                else ViewBag.username = "User";
+                if (checkRole(user, "Admin"))
+                    ViewBag.userRole = "Admin";//If the user with given credentials is logged in as admin we store "admin" as a string in the
+                                               //ViewBag.userRole so we can access it in the view and handle it
+                else ViewBag.username = "User"; //if we have logged in user but its not admin we can treat it as a usual user with basic
+                                                //permissions. For this type of user we are not showing the edit and delete buttons (since is
+                                                //not admin)
             }
-            return View(await database.schools.ToListAsync());
+            return View(await database.schools.ToListAsync()); //after success we return the Index view providing list
+                                                               //with all the schools as a model
         }
 
-        // GET: Schools/Details/5
+        //Method that will show the details view about some school that is selected on the page (found by its id)
         public async Task<IActionResult> Details(int? id)
         {
+            //loggedUserId is variable type string that contains logged user's id. If there is no logged user loggedUserId will be null
             string loggedUserId = loggedUser();
+            //In the database we search for user providing it's id. If there is no result it will return null, otherwise
+            //in the user variable we will have the actual user object
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
-            if (user == null) ViewBag.userRole = "User";
+            if (user == null)
+                ViewBag.userRole = "User";//If the user with given credentials is not logged we store "user" as a string in the
+                                          //ViewBag.userRole so we can access it in the view and handle it since we havent logged admin
             else
             {
-                //if (user.Role == "Admin") ViewBag.userRole = "Admin";
-                //else ViewBag.userRole = "User";
-                if (checkRole(user, "Admin")) ViewBag.userRole = "Admin";
-                else ViewBag.username = "User";
-            }
-
-            if (id == null)
-            {
-                return View("error");
+                if (checkRole(user, "Admin"))
+                    ViewBag.userRole = "Admin";//If the user with given credentials is logged in as admin we store "admin" as a string in the
+                                               //ViewBag.userRole so we can access it in the view and handle it
+                else ViewBag.username = "User";//if we have logged in user but its not admin we can treat it as a usual user with basic
+                                               //permissions. For this type of user we are not showing the edit and delete buttons (since is
+                                               //not admin)
             }
 
             var school = await database.schools
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (school == null)
+            if (id == null || school == null)
             {
-                return View("error");
+                return View("error"); //if there is no school with that unique id in the database we are showing error page
             }
 
-            return View(school);
+            return View(school);//if the request came up this far means there is no danger of not logged in user, not admin
+                                //or even hacker so we can show the page where the school's properties can be edited or deleted by the admin
         }
-        //2 Martina
-        // GET: Schools/Create
         //A method for checking if the user is logged in and if the user is admin to return the Create View
         public IActionResult Create()
         {
@@ -102,8 +110,6 @@ namespace webSchool.Controllers
             else ViewBag.username = "User";
             return View("error");
         }
-
-        // POST: Schools/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         //This is a method that is called after filling the create form. It's a post method that is called after pressing the 'save' button on the Create page
@@ -123,10 +129,6 @@ namespace webSchool.Controllers
             //Returns the same page but it is not valid, it shows an error
             return View(school);
         }
-
-        //3 Bojan
-        // GET: Schools/Edit/5
-
         //Returns Edit page where the model's properties can be edited. This is get method so after this call the Edit page
         //should be shown with filled fields properly with the model's info. Id is the parameter that follows the request of the
         //school that should be found in the database and edited
@@ -188,39 +190,34 @@ namespace webSchool.Controllers
             return View(school); //returns the same view with the info in the school object that is sent as a model. This is error and
                                  //we are displaying the error to the clients side on the exact place where he missed the data input 
         }
-        //4 Sofija
         //This activity is programmed but shoulnd't be used
-        // GET: Schools/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             // checking if the user is logged in
             string loggedUserId = loggedUser();
             if (loggedUserId == null)
             {
-                //return View("You should be logged in for this action")
+                //There is no logged user -> the school should't be deleted
                 return View("error"); 
             }
+            //searching the school in the database
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
             if (user == null) return View("error");
-            
-
             // checking if the user is not an Admin, returns the error view 
             // standard user is not allowed to make changes (delete school) in the database
             if (!checkRole(user, "Admin")) return View("error");
- 
             // it searches the school with the given parameter id in the database
             // and the result is stored in the variable school
-            var school = await database.schools
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var school = await database.schools.FirstOrDefaultAsync(m => m.Id == id);
             if (id == null || school == null)
             {
-                return View("error");
+                return View("error");//no such school -> showing error page
             }
             // returns the Delete view and passes the school as a model
             return View(school);
         }
-        
-        // POST: Schools/Delete/5
+
+        // Delete confirm post method
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -231,14 +228,14 @@ namespace webSchool.Controllers
             database.schools.Remove(school);    
             // saves all changes made in this context to the database
             await database.SaveChangesAsync();   
-            return RedirectToAction(nameof(Index));    
+            return RedirectToAction(nameof(Index)); //Returns Index page after a successfull delete  
         }
-
+        //Returns true if a school with the given id is found
         private bool SchoolExists(int id)
         {
             return database.schools.Any(e => e.Id == id);
         }
-        //5 Natasa
+
         //Function that reads the data from the .csv file and saves it in the base
         public void populate()
         {
