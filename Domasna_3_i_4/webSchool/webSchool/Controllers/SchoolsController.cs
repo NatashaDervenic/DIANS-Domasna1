@@ -238,6 +238,7 @@ namespace webSchool.Controllers
                     var values = line.Split(',');//It splits the string into a list
                     School school = new School(values[1], values[2], values[3], values[4], Double.Parse(values[5]), Double.Parse(values[6]),
                         values[7], values[8], values[9], values[10], values[11], Int32.Parse(values[12]));//We convert the string representation of a number in a specified style and format
+                    database.schools.Add(school);//We add a new item to the list
                     database.SaveChanges();//We save the changes
                 }
             } 
