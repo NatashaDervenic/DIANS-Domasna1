@@ -182,6 +182,7 @@ namespace webSchool.Controllers
         // GET: Schools/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // checking if the user is logged
             string loggedUserId = loggedUser();
             if (loggedUserId == null)
             {
@@ -192,20 +193,24 @@ namespace webSchool.Controllers
             //if (user.Role != "Admin")
             //    return View("error");
 
-            if (!checkRole(user, "Admin")) return View("error");//obicen korisnik e nema pravo da brisi ucilista
+            // checking if the user is not an Admin, returns the error view 
+            // standard user is not allowed to make changes (delete school) in the database
+            if (!checkRole(user, "Admin")) return View("error");
  
             //if (id == null)
             //{
             //    return View("error");
             //}
 
+            // it searches the school with the given parameter id in the database
+            // and the result is stored in the variable school
             var school = await database.schools
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (id == null || school == null)
             {
                 return View("error");
             }
-
+            // returns the Delete view and passes the school as a model
             return View(school);
         }
         
@@ -214,10 +219,13 @@ namespace webSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            //school is variable that contains the result of searching by id in the database
             var school = await database.schools.FindAsync(id);
-            database.schools.Remove(school);
-            await database.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            // it removes the school from the database 
+            database.schools.Remove(school);    
+            // saves all changes made in this context to the database
+            await database.SaveChangesAsync();   
+            return RedirectToAction(nameof(Index));    
         }
 
         private bool SchoolExists(int id)
