@@ -127,66 +127,66 @@ namespace webSchool.Controllers
         //3 Bojan
         // GET: Schools/Edit/5
 
+        //Returns Edit page where the model's properties can be edited. This is get method so after this call the Edit page
+        //should be shown with filled fields properly with the model's info. Id is the parameter that follows the request of the
+        //school that should be found in the database and edited
         public async Task<IActionResult> Edit(int? id)
         {
+            //loggedUserId is variable type string that contains logged user's id. If there is no logged user loggedUserId will be null
             string loggedUserId = loggedUser();
             if (loggedUserId == null)
-            {
-                return View("error"); //return View("U should be logged in for this action")
-            }
+                return View("error"); //User is not logged in so (neither is admin) so we are redirecting the error view 
             var user = database.loggedUserRoles.Where(x => x.UserId.Equals(loggedUserId)).ToList().FirstOrDefault();
-            if (user == null) return BadRequest();
-            //if (user.Role != "Admin")
-            //    return View("error");
+            if (user == null)
+                return BadRequest(); //there is no such user with those parameters so (client error) -> showing blank page. No access 
             if (!checkRole(user, "Admin"))
-                return View("error");
+                return View("error"); //The edit page should be available if the user is logged and has the permissions to be admin.
+                                      //Here we check if user is not admin we should't let him edit the school's informations.
+                                      //That's why we are displaying error view with possibility to go back
 
-            //if (id == null)
-            //{
-            //    return View("error");
-            //}
-
-            var school = await database.schools.FindAsync(id);
+            var school = await database.schools.FindAsync(id); //in the variable school we store the school that we found in the database
+                                                               //seaching by it's id (id is the path variable in the request)
             if (id == null || school == null)
             {
-                return View("error");
+                return View("error"); //if there is no school with that unique id in the database we are showing error page
             }
-            return View(school);
+            return View(school); //if the request came up this far means there is no danger of not logged in user, not admin
+                                 //or even hacker so we can show the page where the school's properties can be edited 
         }
-
-        // POST: Schools/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //This is the method that is called after filling the edit form. This is post method after pressing the 'save' button
+        //on the edit page. We are recieving the edited school id and we are binding the info that is filled in the fields
+        //as School object
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,name,imageUrl,city,street,modules,latitude,longitude,contact,email,teachers,workTime,numOfStudents")] School school)
         {
+            //if there is no such school with the same id as the id that we are sending as a parameter we are showing the error page
             if (id != school.Id)
-            {
                 return View("error");
-            }
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) //ModelState.IsValid is true if the form is filled with proper info and contains no error
             {
                 try
                 {
-                    database.Update(school);
-                    await database.SaveChangesAsync();
+                    database.Update(school); //update on the database with the new info about the school
+                    await database.SaveChangesAsync(); //forced save changes on the database
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SchoolExists(school.Id))
+                    if (!SchoolExists(school.Id)) //if searching in the database returns null there is no school that should be edited
+                                                  //in that case we are showing the error page
                     {
                         return View("error");
                     }
                     else
                     {
-                        throw;
+                        throw; //throwing DbUpdateConcurrencyException exception if the school that is found with the id sent as a
+                               //parameter cannot be updated
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); //success. Redirecting to Index page
             }
-            return View(school);
+            return View(school); //returns the same view with the info in the school object that is sent as a model. This is error and
+                                 //we are displaying the error to the clients side on the exact place where he missed the data input 
         }
         //4 Sofija
         //This activity is programmed but shoulnd't be used
